@@ -40,9 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
 import com.example.movieappdevexpert.R
 import com.example.movieappdevexpert.common.LoadingProgressIndicator
@@ -54,19 +51,13 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     val state by vm.state.collectAsState()
     val title = state.movie?.title ?: ""
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val lifecycle = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(vm, lifecycle) {
-        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            vm.events.collect { event ->
-                when (event) {
-                    is DetailViewModel.UiEvent.ShowMessage -> {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarHostState.showSnackbar(event.message)
-                    }
-                }
-            }
+    LaunchedEffect(state.message) {
+        state.message?.let {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(it)
+            vm.onMessageShown()
         }
     }
 
