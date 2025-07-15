@@ -18,5 +18,5 @@ Este proyecto utilizando Kotlin y las últimas bibliotecas de Jetpack.
 *   Android Studio Bumblebee | 2021.1.1 o superior.
 *   JDK 11 o superior.
 *   Obtener una API Key de [The Movie Database (TMDB)](https://www.themoviedb.org/documentation/api),
-*    posteriormente almancenar en una variable TMDB_API_KEY en archivo local.prperty
+*    posteriormente almancenar en una variable TMDB_API_KEY en archivo local.property
 
