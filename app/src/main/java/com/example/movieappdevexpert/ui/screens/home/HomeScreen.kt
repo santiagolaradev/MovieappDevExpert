@@ -16,9 +16,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,37 +28,37 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movieappdevexpert.R
 import com.example.movieappdevexpert.common.LoadingProgressIndicator
-import com.example.movieappdevexpert.common.PermissionRequestEffect
 import com.example.movieappdevexpert.common.Screen
 import com.example.movieappdevexpert.data.Movie
-import androidx.compose.runtime.getValue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (Movie) -> Unit,
-    vm: HomeViewModel = viewModel() //se suele colocar como argumento
+    vm: HomeViewModel = viewModel()
     ) {
 
-    PermissionRequestEffect(permission = android.Manifest.permission.ACCESS_COARSE_LOCATION) { granted ->
-        if (granted) {
+    val homeState = rememberHomeState()
+
+    homeState.AskLocationEffect { isGranted ->
+        if (isGranted) {
             vm.onUiReady()
         }
     }
 
     Screen {
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
 
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { Text(text = stringResource(id = R.string.app_name)) },
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = homeState.scrollBehavior
                 )
 
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(homeState.scrollBehavior.nestedScrollConnection),
             contentWindowInsets = WindowInsets.safeDrawing
         ) { padding ->
             val state by vm.state.collectAsState()

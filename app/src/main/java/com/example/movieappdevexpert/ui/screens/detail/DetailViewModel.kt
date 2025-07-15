@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel(private val id: Int): ViewModel() {
 
-
     private val repository = MoviesRepository(MoviesClient.instance)
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
